@@ -42,6 +42,7 @@ function App() {
 
   return <div className="app-shell">
     <header className="topbar">
+      
       <div className="course-name">MINICURSO <b>/</b> APRENDIZAGEM COLABORATIVA</div>
     </header>
 
