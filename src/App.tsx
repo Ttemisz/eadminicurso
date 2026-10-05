@@ -23,6 +23,16 @@ const quiz: QuizQuestion[] = [
     options: ['Ferramenta, finalidade e como o resultado foi tratado', 'Todas as perguntas, sem contexto', 'Nada, para preservar a entrega'],
     answer: 0,
   },
+  {
+    question: 'Qual é uma boa prática para equipes que trabalham remotamente?',
+    options: ['Manter decisões apenas na memória do grupo', 'Deixar todas as tarefas sem responsável', 'Registrar decisões e deixar o andamento das tarefas visível'],
+    answer: 2,
+  },
+  {
+    question: 'Qual é o objetivo da revisão entre colegas?',
+    options: ['Encontrar culpados pelos problemas', 'Melhorar o trabalho com feedback e aprender com outras soluções', 'Impedir que outras pessoas contribuam'],
+    answer: 1,
+  },
 ]
 
 function App() {
@@ -44,6 +54,10 @@ function App() {
         <article><span>02</span><h2>Colaboração</h2><p>Compartilhe decisões, faça revisões entre colegas e assuma responsabilidade pelo resultado coletivo.</p></article>
         <article><span>03</span><h2>Transparência</h2><p>Registre contribuições, decisões e o uso da inteligência artificial durante o projeto.</p></article>
       </div>
+      <details className="summary-details">
+        <summary>Quer saber mais sobre o minicurso? <span>↓</span></summary>
+        <p>Ao longo do minicurso, você vai conhecer práticas para transformar um projeto em tarefas menores, acompanhar o trabalho em equipe e revisar as entregas com respeito. Também vai aprender como usar a inteligência artificial como apoio, registrando suas contribuições e decisões com transparência.</p>
+      </details>
     </main>
 
     <section className="resources-section">
