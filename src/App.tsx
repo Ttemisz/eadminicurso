@@ -1,38 +1,86 @@
 import { useState } from 'react'
 import './App.css'
 
-type Section = 'inicio' | 'conteudo' | 'video' | 'avaliacao'
-type Question = { prompt: string; options: string[]; answer: number; explanation: string }
+type QuizQuestion = {
+  question: string
+  options: string[]
+  answer: number
+}
 
-const questions: Question[] = [
-  { prompt: 'Qual é uma boa prática para distribuir responsabilidades em um projeto remoto?', options: ['Deixar todas as tarefas com a pessoa mais experiente', 'Definir responsáveis, prazos e critérios de conclusão visíveis para todos', 'Dividir as tarefas apenas durante a reunião final'], answer: 1, explanation: 'A clareza sobre responsáveis, prazos e entregas evita sobrecarga e torna a colaboração rastreável.' },
-  { prompt: 'O que caracteriza uma revisão entre colegas útil?', options: ['Comentários específicos sobre a entrega e sugestões de melhoria', 'Apenas dizer que o trabalho está bom', 'Refazer toda a tarefa sem conversar com a pessoa autora'], answer: 0, explanation: 'Uma boa revisão é respeitosa, objetiva e ajuda a pessoa autora a evoluir a entrega.' },
-  { prompt: 'Como registrar o uso de uma ferramenta de IA no projeto?', options: ['Ocultar o uso para que a entrega pareça totalmente autoral', 'Informar ferramenta, finalidade e como o resultado foi revisado pela equipe', 'Colocar apenas o nome da ferramenta, sem contexto'], answer: 1, explanation: 'Transparência significa registrar o contexto do uso e manter a responsabilidade humana sobre a decisão final.' },
+const quiz: QuizQuestion[] = [
+  {
+    question: 'O que caracteriza a aprendizagem colaborativa?',
+    options: ['Cada pessoa trabalha sem compartilhar decisões', 'O grupo constrói conhecimento e assume responsabilidade pelo resultado', 'Apenas uma pessoa revisa todo o projeto'],
+    answer: 1,
+  },
+  {
+    question: 'Quando uma tarefa deve ir para “Concluído”?',
+    options: ['Assim que o autor termina o código', 'Depois de ser revisada ou validada', 'Quando alguém pergunta pelo status'],
+    answer: 1,
+  },
+  {
+    question: 'O que registrar sobre o uso da IA?',
+    options: ['Ferramenta, finalidade e como o resultado foi tratado', 'Todas as perguntas, sem contexto', 'Nada, para preservar a entrega'],
+    answer: 0,
+  },
 ]
-const modules = [['01', 'Equipe', 'Organização da equipe', 'Acordos e comunicação'], ['02', 'Responsabilidades', 'Divisão de responsabilidades', 'Papéis e entregas'], ['03', 'Quadro de projeto', 'Trello ou GitHub Projects', 'Acompanhamento visual'], ['04', 'Revisão', 'Revisão entre colegas', 'Feedback que constrói'], ['05', 'IA transparente', 'Uso responsável de IA', 'Registro e autoria']]
-const videoParts = [['00:00', 'Introdução', 'Tema, colaboração e o desafio remoto', '2 min'], ['02:00', 'Organização da equipe', 'Quatro pessoas, quatro papéis', '4 min'], ['06:00', 'Trello ou GitHub Projects', 'Sistema de Biblioteca Online no quadro', '7 min'], ['13:00', 'Revisão entre colegas', 'Maria entrega, João revisa, equipe melhora', '4 min'], ['17:00', 'Uso transparente de IA', 'Sugestão, revisão e registro da autoria', '5 min'], ['22:00', 'Encerramento', 'Resumo e próximos passos', '2 min']]
 
 function App() {
-  const [section, setSection] = useState<Section>('inicio')
-  const [completed, setCompleted] = useState<string[]>([])
-  const [answers, setAnswers] = useState<Record<number, number>>({})
-  const progress = Math.round((completed.length / 3) * 100)
-  const goTo = (next: Section) => { setSection(next); window.scrollTo({ top: 0, behavior: 'smooth' }) }
-  const complete = (item: string) => setCompleted((current) => current.includes(item) ? current : [...current, item])
+  const [quizAnswers, setQuizAnswers] = useState<Record<number, number>>({})
+  const [youtubeUrl, setYoutubeUrl] = useState('https://youtu.be/8kUPWs-L8Yk')
+  const [slidesUrl, setSlidesUrl] = useState('/slides-aprendizagem-colaborativa.zip')
 
   return <div className="app-shell">
-    <header className="topbar"><a className="brand" href="#inicio" onClick={() => goTo('inicio')}><span className="brand-symbol">⌁</span><span>projeto<span>emrede</span></span></a><nav className="top-links"><span>Curso</span><span>Recursos</span><span>Sobre</span></nav><div className="topbar-meta"><span className="status-dot" />{progress}% concluído<div className="progress-track" aria-label={`${progress}% do curso concluído`}><span style={{ width: `${progress}%` }} /></div></div></header>
-    <main>
-      {section === 'inicio' && <>
-        <section className="hero-section"><div className="hero-copy"><div className="breadcrumb"><span>home</span><b>/</b><span>minicurso</span></div><p className="eyebrow">APRENDIZAGEM COLABORATIVA · IA</p><h1>Construa em<br /><span>equipe.</span> Entregue<br />com clareza.</h1><p className="hero-lead">Um guia prático para organizar projetos de Computação a distância, acompanhar tarefas e usar inteligência artificial com transparência.</p><div className="hero-actions"><button className="button button-blue" onClick={() => { complete('conteudo'); goTo('conteudo') }}>Começar o curso <span>→</span></button><button className="outline-link" onClick={() => goTo('video')}>Ver a estrutura da aula <span>↗</span></button></div><div className="hero-meta"><span><b>25</b> min de videoaula</span><span><b>03</b> questões interativas</span><span><b>100%</b> online</span></div></div><div className="hero-visual"><div className="code-label">// equipe_04 / board.tsx</div><div className="kanban"><div className="kanban-head"><span>SISTEMA DE BIBLIOTECA ONLINE</span><span className="board-dots">•••</span></div><div className="kanban-columns"><div><h3>BACKLOG <small>4</small></h3><div className="task"><i className="blue" /><strong>Criar tela de login</strong><small>frontend · João</small></div><div className="task"><i className="orange" /><strong>Criar API de livros</strong><small>backend · Maria</small></div><div className="task"><i className="purple" /><strong>Criar banco de dados</strong><small>dados · Pedro</small></div></div><div><h3>EM ANDAMENTO <small>1</small></h3><div className="task active"><i className="blue" /><strong>Criar tela de login</strong><small>João · 68%</small><div className="mini-progress"><span /></div></div></div><div><h3>EM REVISÃO <small>1</small></h3><div className="task review"><i className="orange" /><strong>API de livros</strong><small>Maria → João</small><span className="review-tag">REVISÃO</span></div></div></div><div className="kanban-foot"><span>última atualização: agora</span><span className="members"><b>JM</b><b>MA</b><b>PD</b><b>+1</b></span></div></div><div className="terminal-note"><span className="terminal-prompt">&gt;</span> IA usada, revisada e registrada <span className="cursor" /></div></div></section>
-        <section className="stats-band"><div><strong>01</strong><span>entenda o<br />processo</span></div><div><strong>02</strong><span>acompanhe o<br />projeto</span></div><div><strong>03</strong><span>avalie suas<br />decisões</span></div><div className="stats-note">Aprender fazendo<br /><b>→</b></div></section>
-        <section className="module-preview"><div className="section-heading"><div><p className="eyebrow">CONTEÚDO DO CURSO</p><h2>Do primeiro acordo<br />à última revisão.</h2></div><p>Uma sequência curta e objetiva para transformar colaboração remota em um processo que a equipe consegue enxergar.</p></div><div className="module-list">{modules.map((module) => <div className="module-row" key={module[0]}><span className="module-number">{module[0]}</span><div><strong>{module[2]}</strong><small>{module[3]}</small></div><span className="row-arrow">↗</span></div>)}</div></section>
-      </>}
-      {section === 'conteudo' && <section className="page-padding"><div className="breadcrumb"><span>home</span><b>/</b><span>conceitos</span></div><p className="eyebrow">MÓDULO 01 · CONCEITOS</p><h1>Antes da ferramenta,<br /><span>vem o acordo.</span></h1><div className="content-layout"><aside className="side-nav"><span className="side-label">NESTA PARTE</span>{modules.map((module, index) => <button className={index === 0 ? 'active' : ''} key={module[0]}><span>{module[0]}</span>{module[1]}</button>)}</aside><div className="lesson-copy"><p className="lead-copy">A colaboração a distância funciona quando o processo fica visível. Antes de abrir o quadro de tarefas, a equipe precisa combinar como vai trabalhar.</p><div className="principles"><article><span>01</span><h3>Combine o ritmo</h3><p>Defina canais, frequência de encontros e como sinalizar bloqueios.</p></article><article><span>02</span><h3>Deixe rastros</h3><p>Registre decisões e contribuições no próprio projeto.</p></article><article><span>03</span><h3>Revise junto</h3><p>Feedback é uma conversa contínua para melhorar a entrega.</p></article></div><div className="callout"><span>i</span><p><strong>Ideia-chave</strong><br />Visibilidade não é controle. É o que permite que a equipe se ajude no momento certo.</p></div><button className="button button-blue" onClick={() => { complete('video'); goTo('video') }}>Ir para a demonstração <span>→</span></button></div></div></section>}
-      {section === 'video' && <section className="page-padding video-page"><div className="breadcrumb"><span>home</span><b>/</b><span>aula</span></div><p className="eyebrow">MÓDULO 02 · VIDEOAULA</p><h1>Uma equipe fictícia.<br /><span>Um projeto visível.</span></h1><p className="page-intro">Acompanhe a organização do Sistema de Biblioteca Online, do backlog à revisão, em aproximadamente 25 minutos.</p><div className="video-frame"><div className="video-placeholder"><span className="video-play">▶</span><span className="video-caption">VIDEOAULA · ORGANIZAÇÃO NA PRÁTICA</span><span className="video-corner">[ YouTube embed ]</span></div></div><div className="video-details"><div><span className="detail-label">DURAÇÃO</span><strong>25 min</strong></div><div><span className="detail-label">FORMATO</span><strong>Demonstração guiada</strong></div><div><span className="detail-label">FERRAMENTA</span><strong>Trello ou GitHub Projects</strong></div></div><div className="video-outline"><div className="outline-head"><h2>Roteiro da aula</h2><span>6 partes · 25 min</span></div>{videoParts.map((part) => <div className="outline-row" key={part[0]}><code>{part[0]}</code><strong>{part[1]}</strong><span>{part[2]}</span><small>{part[3]}</small></div>)}</div><section className="example-section"><div className="section-heading"><div><p className="eyebrow">EXEMPLO UTILIZADO NA AULA</p><h2>O quadro da equipe<br /><span>em uma tela.</span></h2></div><p>O projeto fictício permite acompanhar tarefas, responsáveis, contribuições, revisão e uso de IA sem precisar programar um sistema real.</p></div><div className="example-board"><div className="example-column"><h3>BACKLOG <small>04</small></h3><span>○ Criar tela de login</span><span>○ Criar API de livros</span><span>○ Criar banco de dados</span><span>○ Criar testes</span></div><div className="example-column"><h3>EM ANDAMENTO <small>01</small></h3><span className="selected-task">◐ Criar tela de login <b>João</b></span></div><div className="example-column"><h3>EM REVISÃO <small>01</small></h3><span className="review-task">◉ API de livros <b>Maria → João</b></span></div><div className="example-column"><h3>CONCLUÍDO <small>01</small></h3><span className="done-task">● Configuração inicial <b>Pedro</b></span></div></div><div className="team-table"><div className="table-head"><span>integrante</span><span>tarefa principal</span><span>contribuição / registro</span><span>revisão</span></div><div><b>João</b><span>Front-end</span><span>Tela de login · uso de IA registrado</span><span>Revisa API</span></div><div><b>Maria</b><span>Back-end</span><span>API de livros</span><span>Recebe feedback</span></div><div><b>Pedro</b><span>Banco de dados</span><span>Modelo de dados</span><span>Revisa testes</span></div><div><b>Ana</b><span>Testes / docs</span><span>Casos de teste e documentação</span><span>Revisa front-end</span></div></div></section><button className="button button-blue" onClick={() => { complete('avaliacao'); goTo('avaliacao') }}>Fazer a avaliação <span>→</span></button></section>}
-      {section === 'avaliacao' && <section className="page-padding"><div className="breadcrumb"><span>home</span><b>/</b><span>avaliação</span></div><p className="eyebrow">MÓDULO 03 · AVALIAÇÃO</p><h1>Agora é com<br /><span>você.</span></h1><p className="page-intro">Responda às perguntas e veja o feedback de cada escolha. Não é sobre decorar: é sobre tomar boas decisões em equipe.</p><div className="quiz-list">{questions.map((question, index) => { const selected = answers[index]; return <article className="question" key={question.prompt}><div className="question-heading"><span>0{index + 1}</span><h2>{question.prompt}</h2></div><div className="options">{question.options.map((option, optionIndex) => <button className={selected === optionIndex ? (selected === question.answer ? 'selected correct' : 'selected incorrect') : ''} key={option} onClick={() => setAnswers((current) => ({ ...current, [index]: optionIndex }))}><span>{String.fromCharCode(65 + optionIndex)}</span>{option}</button>)}</div>{selected !== undefined && <p className="feedback"><strong>{selected === question.answer ? 'Correto.' : 'Vale revisar.'}</strong> {question.explanation}</p>}</article> })}</div>{Object.keys(answers).length === questions.length && <div className="completion"><span>✓</span><div><strong>Você concluiu o minicurso.</strong><p>Leve esse processo para o próximo projeto da sua equipe.</p></div></div>}</section>}
+    <header className="topbar">
+      <div className="course-name">MINICURSO <b>/</b> APRENDIZAGEM COLABORATIVA</div>
+    </header>
+
+    <main className="course-summary">
+      <p className="eyebrow">RESUMO DO MINICURSO</p>
+      <h1>Aprendizagem colaborativa<br /><span>em projetos com IA.</span></h1>
+      <p className="summary-lead">Como organizar equipes, acompanhar tarefas e aprender em conjunto em projetos de Computação a distância.</p>
+      <div className="summary-grid">
+        <article><span>01</span><h2>Organização</h2><p>Divida projetos em tarefas claras, defina responsabilidades e acompanhe cada etapa do trabalho.</p></article>
+        <article><span>02</span><h2>Colaboração</h2><p>Compartilhe decisões, faça revisões entre colegas e assuma responsabilidade pelo resultado coletivo.</p></article>
+        <article><span>03</span><h2>Transparência</h2><p>Registre contribuições, decisões e o uso da inteligência artificial durante o projeto.</p></article>
+      </div>
     </main>
-    <nav className="bottom-nav" aria-label="Navegação do curso"><button className={section === 'inicio' ? 'current' : ''} onClick={() => goTo('inicio')}>Início</button><button className={section === 'conteudo' ? 'current' : ''} onClick={() => goTo('conteudo')}>Conceitos</button><button className={section === 'video' ? 'current' : ''} onClick={() => goTo('video')}>Demonstração</button><button className={section === 'avaliacao' ? 'current' : ''} onClick={() => goTo('avaliacao')}>Avaliação <span className="nav-dot" /></button></nav><footer><span>PROJETO EM REDE · CURSO ONLINE</span><span>Aprendizagem colaborativa em projetos com IA</span><span>2026</span></footer>
+
+    <section className="resources-section">
+      <div className="resources-heading">
+        <p className="eyebrow">ASSISTA E ACESSE</p>
+        <h2>Continue estudando<br /><span>com os materiais.</span></h2>
+        <p>Assista à videoaula e baixe os slides para revisar os conteúdos do minicurso.</p>
+      </div>
+      <div className="resource-fields">
+        <div className="resource-card">
+          <span className="resource-icon">▶</span>
+          <div className="resource-copy">
+            <label htmlFor="youtube-link">Vídeo da aula no YouTube</label>
+            <p>Acesse a videoaula completa.</p>
+            <input id="youtube-link" type="url" value={youtubeUrl} onChange={(event) => setYoutubeUrl(event.target.value)} />
+            <a className={`resource-button ${youtubeUrl ? '' : 'disabled'}`} href={youtubeUrl || undefined} target="_blank" rel="noreferrer" onClick={(event) => !youtubeUrl && event.preventDefault()}>Abrir vídeo <span>↗</span></a>
+          </div>
+        </div>
+        <div className="resource-card">
+          <span className="resource-icon download-icon">↓</span>
+          <div className="resource-copy">
+            <label htmlFor="slides-link">Download dos slides</label>
+            <p>Baixe o arquivo com todos os slides da aula.</p>
+            <input id="slides-link" type="text" value={slidesUrl} onChange={(event) => setSlidesUrl(event.target.value)} />
+            <a className={`resource-button ${slidesUrl ? '' : 'disabled'}`} href={slidesUrl || undefined} download onClick={(event) => !slidesUrl && event.preventDefault()}>Baixar slides <span>↓</span></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section className="quiz-section">
+      <div><p className="eyebrow">QUIZ FINAL</p><h2>Você acompanhou o processo?</h2><p className="quiz-intro">Teste seus conhecimentos sobre organização, colaboração e uso responsável da IA.</p></div>
+      <div className="quiz-list">{quiz.map((item, index) => <article className="quiz-card" key={item.question}><span>0{index + 1}</span><h3>{item.question}</h3>{item.options.map((option, optionIndex) => <button key={option} className={quizAnswers[index] === optionIndex ? (optionIndex === item.answer ? 'correct' : 'wrong') : ''} onClick={() => setQuizAnswers({ ...quizAnswers, [index]: optionIndex })}>{option}</button>)}{quizAnswers[index] !== undefined && <p className={quizAnswers[index] === item.answer ? 'feedback correct-text' : 'feedback'}>{quizAnswers[index] === item.answer ? 'Muito bem! Essa é a prática recomendada.' : 'Releia o resumo e tente novamente.'}</p>}</article>)}</div>
+    </section>
+
+    <footer className="site-footer"><span>Aprendizagem colaborativa em projetos com IA</span><span>Bom estudo!</span></footer>
   </div>
 }
+
 export default App
