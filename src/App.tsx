@@ -17,6 +17,13 @@ type EbookChapter = {
   checklist: string[]
 }
 
+type StudyMapStep = {
+  title: string
+  description: string
+  prompt: string
+  color: string
+}
+
 const quiz: QuizQuestion[] = [
   {
     question: 'O que caracteriza a aprendizagem colaborativa?',
@@ -121,13 +128,44 @@ const ebookChapters: EbookChapter[] = [
   },
 ]
 
+const studyMapSteps: StudyMapStep[] = [
+  {
+    title: '1. Planejar',
+    description: 'Transforme o objetivo do projeto em funcionalidades e tarefas pequenas, com responsáveis e critérios de validação.',
+    prompt: 'Pergunta-guia: o que precisa ser feito e como saberemos que está pronto?',
+    color: 'blue',
+  },
+  {
+    title: '2. Colaborar',
+    description: 'Compartilhe decisões, conhecimentos e dúvidas. Dividir tarefas organiza o trabalho, mas a colaboração conecta as partes.',
+    prompt: 'Pergunta-guia: quem precisa conhecer esta decisão ou contribuir com ela?',
+    color: 'green',
+  },
+  {
+    title: '3. Revisar',
+    description: 'Antes de concluir, peça a outra pessoa que verifique requisitos, funcionamento, organização e documentação.',
+    prompt: 'Pergunta-guia: que evidência mostra que esta entrega foi validada?',
+    color: 'orange',
+  },
+  {
+    title: '4. Refletir',
+    description: 'Registre o que funcionou, o que precisa melhorar e como a IA foi usada, mantendo a equipe responsável pelas decisões.',
+    prompt: 'Pergunta-guia: o que aprendemos e qual será o próximo ajuste?',
+    color: 'purple',
+  },
+]
+
 function App() {
   const [quizAnswers, setQuizAnswers] = useState<Record<number, number>>({})
-  const [youtubeUrl, setYoutubeUrl] = useState('https://youtu.be/8kUPWs-L8Yk')
-  const [slidesUrl, setSlidesUrl] = useState('/slides-aprendizagem-colaborativa.zip')
   const [ebookOpen, setEbookOpen] = useState(false)
   const [ebookChapter, setEbookChapter] = useState(0)
+  const [studyMapStep, setStudyMapStep] = useState(0)
   const currentChapter = ebookChapters[ebookChapter]
+  const currentStudyMapStep = studyMapSteps[studyMapStep]
+  const youtubeUrl = 'https://youtu.be/8kUPWs-L8Yk'
+  const youtubeEmbedUrl = 'https://www.youtube.com/embed/8kUPWs-L8Yk'
+  const ebookUrl = 'https://online.fliphtml5.com/mrowbp/ebook-aprendizagem-colaborativa/'
+  const slidesUrl = '/slides-aprendizagem-colaborativa.zip'
 
   return <div className="app-shell">
     <header className="topbar">
@@ -162,8 +200,8 @@ function App() {
           <div className="resource-copy">
             <label htmlFor="youtube-link">Vídeo da aula no YouTube</label>
             <p>Acesse a videoaula completa.</p>
-            <input id="youtube-link" type="url" value={youtubeUrl} onChange={(event) => setYoutubeUrl(event.target.value)} />
-            <a className={`resource-button ${youtubeUrl ? '' : 'disabled'}`} href={youtubeUrl || undefined} target="_blank" rel="noreferrer" onClick={(event) => !youtubeUrl && event.preventDefault()}>Abrir vídeo <span>↗</span></a>
+            <div className="video-embed"><iframe id="youtube-link" src={youtubeEmbedUrl} title="Videoaula sobre aprendizagem colaborativa em projetos com IA" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen /></div>
+            <a className="resource-button" href={youtubeUrl} target="_blank" rel="noreferrer">Abrir no YouTube <span>↗</span></a>
           </div>
         </div>
         <div className="resource-card">
@@ -171,21 +209,41 @@ function App() {
           <div className="resource-copy">
             <label htmlFor="slides-link">Download dos slides</label>
             <p>Baixe o arquivo com todos os slides da aula.</p>
-            <input id="slides-link" type="text" value={slidesUrl} onChange={(event) => setSlidesUrl(event.target.value)} />
-            <a className={`resource-button ${slidesUrl ? '' : 'disabled'}`} href={slidesUrl || undefined} download onClick={(event) => !slidesUrl && event.preventDefault()}>Baixar slides <span>↓</span></a>
+            <a id="slides-link" className="resource-button" href={slidesUrl} download>Baixar slides <span>↓</span></a>
           </div>
         </div>
         <div className="resource-card ebook-card">
           <span className="resource-icon ebook-icon">▤</span>
           <div className="resource-copy">
             <label htmlFor="ebook-button">E-book do minicurso</label>
-            <p>Leia o conteúdo organizado em capítulos e acompanhe a lógica da videoaula.</p>
+            <p>Leia o e-book interativo publicado no FlipHTML5, com capa, sumário e capítulos.</p>
             <div className="ebook-actions">
               <button id="ebook-button" className="resource-button" type="button" onClick={() => { setEbookChapter(0); setEbookOpen(true) }}>Ler e-book <span>→</span></button>
-              <a className="resource-button ebook-download" href="/ebook-aprendizagem-colaborativa.pdf" download>Baixar PDF <span>↓</span></a>
+              <a className="resource-button ebook-download" href={ebookUrl} target="_blank" rel="noreferrer">Abrir e-book no FlipHTML5 <span>↗</span></a>
             </div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section className="alternative-media-section">
+      <div className="alternative-media-heading">
+        <p className="eyebrow">ITEM 2 · MÍDIA ALTERNATIVA</p>
+        <h2>Mapa interativo<br /><span>da colaboração.</span></h2>
+        <p>Use este mapa para acompanhar o ciclo de uma equipe: planejar, colaborar, revisar e refletir. Clique em cada etapa para revelar uma ação prática.</p>
+        <p className="media-note"><strong>Como estudar:</strong> percorra as quatro etapas e escolha uma pergunta-guia para aplicar ao seu próximo projeto.</p>
+      </div>
+      <div className="study-map" aria-label="Mapa interativo do ciclo de colaboração">
+        <div className="study-map-path" aria-hidden="true" />
+        <div className="study-map-steps">
+          {studyMapSteps.map((step, index) => <button key={step.title} type="button" className={`study-map-step ${step.color} ${index === studyMapStep ? 'active' : ''}`} onClick={() => setStudyMapStep(index)} aria-pressed={index === studyMapStep}><span>0{index + 1}</span><strong>{step.title}</strong></button>)}
+        </div>
+        <article className={`study-map-detail ${currentStudyMapStep.color}`}>
+          <p className="eyebrow">ETAPA SELECIONADA</p>
+          <h3>{currentStudyMapStep.title}</h3>
+          <p>{currentStudyMapStep.description}</p>
+          <div className="study-map-prompt"><span>✦</span>{currentStudyMapStep.prompt}</div>
+        </article>
       </div>
     </section>
 
@@ -211,12 +269,12 @@ function App() {
             {ebookChapters.map((chapter, index) => <button key={chapter.title} type="button" className={index === ebookChapter ? 'active' : ''} onClick={() => setEbookChapter(index)}><span>0{index + 1}</span>{chapter.title}</button>)}
           </nav>
           <article className="ebook-content">
-            <div className="ebook-chapter-meta"><span>{currentChapter.eyebrow}</span><a href={`${youtubeUrl}${youtubeUrl.includes('?') ? '&' : '?'}t=${Math.floor((ebookChapter === 0 ? 133 : ebookChapter === 1 ? 315 : ebookChapter === 2 ? 459 : ebookChapter === 3 ? 617 : ebookChapter === 4 ? 777 : 999))}s`} target="_blank" rel="noreferrer">Acompanhar no vídeo ↗</a></div>
+            <div className="ebook-chapter-meta"><span>{currentChapter.eyebrow}</span><a href={`${youtubeUrl}?t=${Math.floor((ebookChapter === 0 ? 133 : ebookChapter === 1 ? 315 : ebookChapter === 2 ? 459 : ebookChapter === 3 ? 617 : ebookChapter === 4 ? 777 : 999))}`} target="_blank" rel="noreferrer">Acompanhar no vídeo ↗</a></div>
             <h3>{currentChapter.title}</h3>
             <p className="ebook-summary">{currentChapter.summary}</p>
             {currentChapter.sections.map((section) => <section key={section.title}><h4>{section.title}</h4><p>{section.text}</p></section>)}
             <div className="ebook-checklist"><strong>Para praticar</strong>{currentChapter.checklist.map((item) => <p key={item}><span>✓</span>{item}</p>)}</div>
-            <div className="ebook-controls"><button type="button" disabled={ebookChapter === 0} onClick={() => setEbookChapter(ebookChapter - 1)}>← Anterior</button><span>{ebookChapter + 1} / {ebookChapters.length}</span><div className="ebook-control-actions"><a href="/ebook-aprendizagem-colaborativa.pdf" download>Baixar PDF</a><button type="button" disabled={ebookChapter === ebookChapters.length - 1} onClick={() => setEbookChapter(ebookChapter + 1)}>Próximo →</button></div></div>
+            <div className="ebook-controls"><button type="button" disabled={ebookChapter === 0} onClick={() => setEbookChapter(ebookChapter - 1)}>← Anterior</button><span>{ebookChapter + 1} / {ebookChapters.length}</span><div className="ebook-control-actions"><a href={ebookUrl} target="_blank" rel="noreferrer">Abrir no FlipHTML5 ↗</a><button type="button" disabled={ebookChapter === ebookChapters.length - 1} onClick={() => setEbookChapter(ebookChapter + 1)}>Próximo →</button></div></div>
           </article>
         </div>
       </section>
